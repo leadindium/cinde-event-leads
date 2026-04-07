@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft, Mail, Phone, MapPin, Clock,
-  Star, Tag, FileText, Camera, Share2, Contact, Trash2,
+  StickyNote, FileText, Camera, Share2, Contact, Trash2,
 } from 'lucide-react';
 import { useLeadStore } from '../store/useLeadStore';
 import StarRating from './StarRating';
@@ -23,8 +23,10 @@ export default function LeadDetail() {
 
   const [notes, setLocalNotes] = useState(lead?.notes || '');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [activeSection, setActiveSection] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const notesRef = useRef<HTMLDivElement>(null);
+  const docsRef = useRef<HTMLDivElement>(null);
+  const photosRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (lead) setLocalNotes(lead.notes);
@@ -49,11 +51,14 @@ export default function LeadDetail() {
     );
   }
 
+  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   const quickActions = [
-    { icon: Star, label: 'Rate', key: 'rate' },
-    { icon: Tag, label: 'Tag', key: 'tag' },
-    { icon: FileText, label: 'Send Doc', key: 'doc' },
-    { icon: Camera, label: 'Photo', key: 'photo' },
+    { icon: StickyNote, label: 'Add Notes', key: 'notes', action: () => scrollTo(notesRef) },
+    { icon: FileText, label: 'Send Doc', key: 'doc', action: () => scrollTo(docsRef) },
+    { icon: Camera, label: 'Add Photo', key: 'photo', action: () => scrollTo(photosRef) },
     {
       icon: Share2, label: 'Share', key: 'share',
       action: async () => {
@@ -114,12 +119,8 @@ export default function LeadDetail() {
           {quickActions.map((qa) => (
             <button
               key={qa.key}
-              onClick={() => qa.action ? qa.action() : setActiveSection(activeSection === qa.key ? null : qa.key)}
-              className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg border text-xs font-medium transition-colors shrink-0 ${
-                activeSection === qa.key
-                  ? 'bg-primary text-white border-primary'
-                  : 'border-border text-text-light hover:bg-bg'
-              }`}
+              onClick={() => qa.action?.()}
+              className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg border border-border text-xs font-medium text-text-light hover:bg-bg transition-colors shrink-0"
             >
               <qa.icon size={18} />
               {qa.label}
@@ -127,49 +128,52 @@ export default function LeadDetail() {
           ))}
         </div>
 
-        {/* Status */}
-        <div className="bg-white rounded-lg border border-border p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-          <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Status</label>
-          <StatusSelector status={lead.status} onChange={(s) => setStatus(lead.id, s)} />
-        </div>
+        {/* All detail sections in one card */}
+        <div className="bg-white rounded-lg border border-border shadow-[0_1px_3px_rgba(0,0,0,0.08)] divide-y divide-border">
+          {/* Status */}
+          <div className="p-4">
+            <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Status</label>
+            <StatusSelector status={lead.status} onChange={(s) => setStatus(lead.id, s)} />
+          </div>
 
-        {/* Rating */}
-        <div className="bg-white rounded-lg border border-border p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-          <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Rating</label>
-          <StarRating rating={lead.rating} onChange={(r) => setRating(lead.id, r)} size={28} />
-        </div>
+          {/* Rating */}
+          <div className="p-4">
+            <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Rating</label>
+            <StarRating rating={lead.rating} onChange={(r) => setRating(lead.id, r)} size={28} />
+          </div>
 
-        {/* Tags */}
-        <div className="bg-white rounded-lg border border-border p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-          <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Tags</label>
-          <TagPicker
-            selectedTags={lead.tags}
-            onAdd={(tag) => addTag(lead.id, tag)}
-            onRemove={(tag) => removeTag(lead.id, tag)}
-          />
-        </div>
+          {/* Tags */}
+          <div className="p-4">
+            <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Tags</label>
+            <TagPicker
+              selectedTags={lead.tags}
+              onAdd={(tag) => addTag(lead.id, tag)}
+              onRemove={(tag) => removeTag(lead.id, tag)}
+            />
+          </div>
 
-        {/* Notes */}
-        <div className="bg-white rounded-lg border border-border p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-          <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Notes</label>
-          <textarea
-            value={notes}
-            onChange={(e) => handleNotesChange(e.target.value)}
-            placeholder="Add notes about this conversation..."
-            className="w-full min-h-[80px] text-sm border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-y"
-          />
-        </div>
+          {/* Notes */}
+          <div className="p-4" ref={notesRef}>
+            <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Notes</label>
+            <textarea
+              value={notes}
+              onChange={(e) => handleNotesChange(e.target.value)}
+              placeholder="Add notes about this conversation..."
+              className="w-full min-h-[80px] text-sm border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-y"
+            />
+          </div>
 
-        {/* Documents */}
-        <div className="bg-white rounded-lg border border-border p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-          <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Documents</label>
-          <DocumentPicker leadId={lead.id} sentDocuments={lead.documentsSent} />
-        </div>
+          {/* Documents */}
+          <div className="p-4" ref={docsRef}>
+            <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Documents</label>
+            <DocumentPicker leadId={lead.id} sentDocuments={lead.documentsSent} />
+          </div>
 
-        {/* Photos */}
-        <div className="bg-white rounded-lg border border-border p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-          <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Photos</label>
-          <PhotoGrid leadId={lead.id} photos={lead.photos} />
+          {/* Photos */}
+          <div className="p-4" ref={photosRef}>
+            <label className="text-xs font-semibold text-text-light uppercase tracking-wider mb-2 block">Photos</label>
+            <PhotoGrid leadId={lead.id} photos={lead.photos} />
+          </div>
         </div>
 
         {/* Footer Actions */}
