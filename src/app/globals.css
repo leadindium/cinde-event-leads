@@ -1,0 +1,165 @@
+@import 'tailwindcss';
+
+/* -------------------------------------------------- */
+/* CINDE Design System — Tokens                       */
+/* Copia adaptada de cinde-design-system/tokens/globals.css */
+/* -------------------------------------------------- */
+
+:root {
+  --gradient-start: #c9d6ff;
+  --gradient-end: #e9e4f0;
+  --gradient-purple: #7f99f0;
+  --gradient-pink: #e9e4f0;
+  --blue-light: #5a7eda;
+  --blue: #007aff;
+  --blue-hover: #1d89ff;
+  --foreground: #1a1a2e;
+}
+
+@theme inline {
+  --color-gradient-purple: var(--gradient-purple);
+  --color-gradient-pink: var(--gradient-pink);
+  --color-blue-light: var(--blue-light);
+  --color-blue: var(--blue);
+  --font-sans: var(--font-gotham);
+}
+
+body {
+  color: var(--foreground);
+  font-family: var(
+    --font-gotham,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif
+  );
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Todo lo "formulario-ish" = 14px fijo */
+input,
+select,
+textarea,
+.table {
+  font-size: 14px;
+}
+
+/* -------------------------------------------------- */
+/* .table — patrón de tabla del sistema                */
+/* -------------------------------------------------- */
+.table {
+  @apply w-full;
+}
+
+.table thead {
+  @apply bg-blue-light/10;
+}
+
+.table thead th {
+  @apply px-4 py-3 text-left text-xs;
+}
+.table thead th:first-child {
+  @apply rounded-l-md;
+}
+.table thead th:last-child {
+  @apply rounded-r-md;
+}
+
+.table tbody tr {
+  @apply border-b border-gray-200;
+}
+.table tbody td {
+  @apply min-w-24 px-4 py-3 text-left;
+}
+
+/* -------------------------------------------------- */
+/* .input-group — label izquierda, input derecha       */
+/* -------------------------------------------------- */
+.input-group {
+  @apply flex items-start gap-10 border-b border-gray-200 py-5;
+}
+
+.input-group label {
+  @apply text-sm font-semibold;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  @apply w-full border-none bg-transparent outline-none;
+  font-size: 14px;
+}
+
+.input-group > :first-child {
+  @apply w-full max-w-80;
+}
+
+.input-group > div {
+  @apply w-full max-w-lg;
+}
+
+.input-group .input {
+  @apply w-full rounded-lg border border-gray-300 p-2 shadow-xs;
+}
+
+.input-group .error {
+  @apply mt-1 text-sm text-red-500;
+}
+
+.input-group input:disabled {
+  @apply cursor-not-allowed opacity-30;
+}
+
+/* -------------------------------------------------- */
+/* .switch — toggle ios-style                          */
+/* -------------------------------------------------- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
