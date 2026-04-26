@@ -172,6 +172,10 @@ export const useLeadStore = create<LeadStore>()(
     {
       name: 'cinde-leads-store',
       storage: createJSONStorage(() => localStorage),
+      // SSR-safe: el render inicial siempre usa mockLeads (server + client primer render).
+      // El layout monta <StoreHydrator/> que llama .rehydrate() en useEffect.
+      // Sin esto, el store tendría datos distintos en server vs client → hydration mismatch.
+      skipHydration: true,
       // No persistir las photos (son object URLs que mueren al refrescar).
       partialize: (state) => ({
         ...state,

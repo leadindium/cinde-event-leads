@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import { useLeadStore } from '@/features/leads/store';
 import { STATUS_LABELS, STATUS_COLORS, type LeadStatus } from '@/features/leads/types';
 import Label from '@/components/ds/Label';
-import BtnSearch from '@/components/ds/BtnSearch';
 import BtnIcon from '@/components/ds/BtnIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Pagination from '@/components/ds/Pagination';
 import BtnDropdown from '@/components/ds/BtnDropdown';
 import StarRating from './StarRating';
 import Avatar from './Avatar';
 import { relativeTime } from '@/lib/helpers';
-import { faEye, faPaperPlane } from '@/lib/icons';
+import { faMagnifyingGlass, faEye, faPaperPlane } from '@/lib/icons';
 
 const STATUS_FILTER_OPTIONS = [
   { value: 'all', label: 'All statuses' },
@@ -65,16 +65,8 @@ export default function LeadsTable() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Toolbar */}
+      {/* Toolbar — filtros izq, búsqueda der (en mobile: stacked, search full width) */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <BtnSearch
-          searchTerm={search}
-          onSearch={(v) => {
-            setSearch(v);
-            setCurrentPage(1);
-          }}
-          placeholder="Search name, company, email..."
-        />
         <div className="flex items-center gap-3">
           <BtnDropdown
             options={STATUS_FILTER_OPTIONS}
@@ -89,6 +81,22 @@ export default function LeadsTable() {
             options={SORT_OPTIONS}
             selectedValue={sortBy}
             onSelect={(v) => setSortBy(v as 'newest' | 'rating' | 'name')}
+          />
+        </div>
+        <div className="relative w-full sm:w-80">
+          <FontAwesomeIcon
+            icon={faMagnifyingGlass}
+            className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-sm text-gray-400"
+          />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
+            placeholder="Search name, company, email..."
+            className="focus:border-blue focus:ring-blue/20 h-10 w-full rounded-full border border-gray-200 bg-white pr-4 pl-10 shadow-sm placeholder:italic placeholder:text-gray-400 focus:ring-2 focus:outline-none"
           />
         </div>
       </div>

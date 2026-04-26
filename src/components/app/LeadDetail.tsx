@@ -20,7 +20,7 @@ import { useToast } from '@/components/ds/ToastProvider';
 import BtnBlue from '@/components/ds/BtnBlue';
 import BtnWhite from '@/components/ds/BtnWhite';
 import StarRating from './StarRating';
-import StatusSelector from './StatusSelector';
+import StatusPills from './StatusPills';
 import TagPicker from './TagPicker';
 import DocumentPicker from './DocumentPicker';
 import PhotoGrid from './PhotoGrid';
@@ -115,7 +115,7 @@ export default function LeadDetail({ id }: Props) {
   ];
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-6 lg:px-6">
+    <div className="flex flex-col gap-6 p-4 lg:p-6">
       {/* Back link + name */}
       <div className="flex items-center gap-3">
         <button
@@ -170,8 +170,11 @@ export default function LeadDetail({ id }: Props) {
         </div>
       </div>
 
-      {/* Quick actions */}
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:mx-0 lg:px-0">
+      {/* Status — barra de pills entre la identidad y los detalles */}
+      <StatusPills status={lead.status} onChange={(s) => setStatus(lead.id, s)} />
+
+      {/* Quick actions — sólo en mobile (en desktop ya hay sidebar y todo a la vista) */}
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:hidden">
         {quickActions.map((action) => (
           <button
             key={action.label}
@@ -187,10 +190,6 @@ export default function LeadDetail({ id }: Props) {
 
       {/* Detail sections — todas en un mismo card con dividers */}
       <div className="divide-y divide-gray-200 rounded-2xl bg-white shadow-sm">
-        <Section label="Status">
-          <StatusSelector status={lead.status} onChange={(s) => setStatus(lead.id, s)} />
-        </Section>
-
         <Section label="Rating">
           <StarRating rating={lead.rating} onChange={(r) => setRating(lead.id, r)} size="lg" />
         </Section>

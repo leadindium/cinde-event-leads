@@ -1,6 +1,7 @@
 'use client';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLeadStore } from '@/features/leads/store';
-import ContentCard from '@/components/ds/ContentCard';
 import { faUsers, faUserPlus, faStar, faFileLines } from '@/lib/icons';
 
 export default function StatsCards() {
@@ -18,35 +19,30 @@ export default function StatsCards() {
   const docsSent = leads.reduce((sum, l) => sum + l.documentsSent.length, 0);
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <ContentCard
-        title="Total leads"
-        value={totalLeads}
-        icon={faUsers}
-        iconBgColor="bg-blue-100"
-        iconColor="text-blue"
-      />
-      <ContentCard
-        title="Today's leads"
-        value={todaysLeads}
-        icon={faUserPlus}
-        iconBgColor="bg-green-100"
-        iconColor="text-green-600"
-      />
-      <ContentCard
-        title="Avg. rating"
-        value={avgRating}
-        icon={faStar}
-        iconBgColor="bg-yellow-100"
-        iconColor="text-yellow-600"
-      />
-      <ContentCard
-        title="Documents sent"
-        value={docsSent}
-        icon={faFileLines}
-        iconBgColor="bg-purple-100"
-        iconColor="text-purple-600"
-      />
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <Stat label="Total leads" value={totalLeads} icon={faUsers} accent="text-blue" />
+      <Stat label="Today" value={todaysLeads} icon={faUserPlus} accent="text-green-600" />
+      <Stat label="Avg. rating" value={avgRating} icon={faStar} accent="text-yellow-600" />
+      <Stat label="Docs sent" value={docsSent} icon={faFileLines} accent="text-purple-600" />
+    </div>
+  );
+}
+
+type StatProps = {
+  label: string;
+  value: string | number;
+  icon: IconDefinition;
+  accent: string;
+};
+
+function Stat({ label, value, icon, accent }: StatProps) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-[#E9EAEB] bg-white px-3 py-2.5">
+      <FontAwesomeIcon icon={icon} className={`text-base ${accent}`} />
+      <div className="flex min-w-0 items-baseline gap-1.5">
+        <span className="text-lg font-bold text-gray-900 leading-none">{value}</span>
+        <span className="truncate text-xs text-gray-500">{label}</span>
+      </div>
     </div>
   );
 }

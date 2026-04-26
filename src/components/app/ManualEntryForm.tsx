@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faFloppyDisk } from '@/lib/icons';
+import { PINNED_COUNTRIES, OTHER_COUNTRIES } from '@/lib/countries';
 import { useLeadStore } from '@/features/leads/store';
 import { useToast } from '@/components/ds/ToastProvider';
 import BtnBlue from '@/components/ds/BtnBlue';
@@ -100,7 +101,25 @@ export default function ManualEntryForm() {
         </Field>
 
         <Field label="Country">
-          <input type="text" placeholder="Costa Rica" className="input" {...register('country')} />
+          <select className="input" defaultValue="" {...register('country')}>
+            <option value="" disabled>
+              Select a country...
+            </option>
+            <optgroup label="Most common">
+              {PINNED_COUNTRIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="All countries">
+              {OTHER_COUNTRIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </optgroup>
+          </select>
         </Field>
 
         <Field label="Company">

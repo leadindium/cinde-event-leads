@@ -77,9 +77,10 @@ textarea,
 
 /* -------------------------------------------------- */
 /* .input-group — label izquierda, input derecha       */
+/* En mobile colapsa a 1 columna (label arriba, input abajo).  */
 /* -------------------------------------------------- */
 .input-group {
-  @apply flex items-start gap-10 border-b border-gray-200 py-5;
+  @apply flex flex-col gap-2 border-b border-gray-200 py-5 sm:flex-row sm:items-start sm:gap-10;
 }
 
 .input-group label {
@@ -94,15 +95,27 @@ textarea,
 }
 
 .input-group > :first-child {
-  @apply w-full max-w-80;
+  @apply w-full sm:max-w-80;
 }
 
 .input-group > div {
-  @apply w-full max-w-lg;
+  @apply w-full sm:max-w-lg;
 }
 
 .input-group .input {
-  @apply w-full rounded-lg border border-gray-300 p-2 shadow-xs;
+  @apply w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 shadow-xs transition-colors;
+}
+
+.input-group .input:hover {
+  @apply border-gray-300;
+}
+
+.input-group .input:focus,
+.input-group .input:focus-within {
+  @apply border-blue bg-white outline-none;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--blue) 18%, transparent),
+    var(--tw-shadow-xs, 0 0 #0000);
 }
 
 .input-group .error {

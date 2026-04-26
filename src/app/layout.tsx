@@ -5,6 +5,7 @@ import { gothamFont } from '@/lib/fonts';
 import { ToastProvider } from '@/components/ds/ToastProvider';
 import { SideModalProvider } from '@/components/ds/SideModalProvider';
 import SideModal from '@/components/ds/SideModal';
+import StoreHydrator from '@/features/leads/StoreHydrator';
 
 export const metadata: Metadata = {
   title: 'CINDE Lead Capture — Life Sciences Forum 2026',
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased">
         <SideModalProvider>
           <ToastProvider>
+            <StoreHydrator />
             {children}
             <SideModal />
           </ToastProvider>

@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,17 +32,16 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden h-full w-80 flex-col rounded-lg bg-white/80 shadow-md lg:flex">
-      {/* Brand */}
-      <div className="flex flex-col gap-2 px-6 pt-6 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="bg-blue flex h-8 w-8 items-center justify-center rounded-md text-sm font-bold text-white">
-            CL
-          </div>
-          <div>
-            <p className="text-sm font-bold">CINDE</p>
-            <p className="text-blue-light text-xs font-semibold tracking-wide">LEAD CAPTURE</p>
-          </div>
-        </div>
+      {/* Brand — Life Sciences Forum logo (CINDE) */}
+      <div className="flex justify-center px-6 pt-10 pb-8">
+        <Image
+          src="/img/logos/life-sciences.svg"
+          alt="Life Sciences Forum 2026 — CINDE"
+          width={298}
+          height={182}
+          priority
+          className="h-auto w-full max-w-[160px]"
+        />
       </div>
 
       <div className="mx-4 border-b border-black/10" />
